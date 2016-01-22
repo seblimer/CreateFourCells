@@ -112,6 +112,10 @@ namespace CreateFourCells {
 			return count == 1 ? true : false;
 		}
 
+		public static int[] cross(int point) {
+			return new int[] { point - row, point - 1, point + 1, point + row };
+		}
+
 		static void Main(string[] args) {
 			col += 2; // 番兵用の外枠追加
 			row += 2; // 番兵用の外枠追加
@@ -141,8 +145,13 @@ namespace CreateFourCells {
 					else if(j == 0 || j == row - 1) {
 						result[i, j] = -1;
 					}
-					if(comp[1, j] == 1) {
+					if(comp[i, j] == 1) {
 						result[i, j] = 1;
+						foreach(int cr in cross(i * row + j)) {
+							if(comp[cr / row, cr % row] == 3) {
+								result[cr / row, cr % row] = 5;
+							}
+						}
 					}
 				}
 			}
@@ -170,6 +179,9 @@ namespace CreateFourCells {
 			create.write(); // 完成盤面の出力
 			for(int i = 1; i < col - 1; i++) {
 				for(int j = 1; j < row - 1; j++) {
+					if(result[i, j] == 5) {
+						result[i, j] = 0;
+					}
 					System.Console.Write("{0,2}", result[i, j]);
 				}
 				System.Console.WriteLine();
